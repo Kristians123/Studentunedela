@@ -13,8 +13,14 @@
 }
 
 #sakums .lg\:col-span-9 {
+  grid-column: 1 / -1;
   width: 100%;
-  max-width: 58rem;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+#sakums h1 {
+  max-width: 72rem;
 }
 
 @media (max-width: 1023px) {
