@@ -1,422 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-type NavItem = {
-  id: string;
-  label: string;
-};
+const appHtml = "<div class=\"App min-h-screen bg-background text-foreground\"><header data-testid=\"navbar\" class=\"fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/60\"><div class=\"px-6 md:px-12 lg:px-20 h-16 flex items-center justify-between\"><button type=\"button\" data-testid=\"logo-button\" class=\"flex items-center gap-2 group\"><div class=\"w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-terminal\" aria-hidden=\"true\"><polyline points=\"4 17 10 11 4 5\"></polyline><line x1=\"12\" x2=\"20\" y1=\"19\" y2=\"19\"></line></svg></div><div class=\"flex flex-col items-start leading-none\"><span class=\"font-display font-bold text-sm tracking-tight\">JB / LU</span><span class=\"overline text-[0.55rem] text-muted-foreground\">Datorika · 3. kurss</span></div></button><nav class=\"hidden lg:flex items-center gap-1\" data-testid=\"desktop-nav\"><button type=\"button\" data-testid=\"nav-link-sakums\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-primary\">Sākums<span class=\"absolute left-3 right-3 -bottom-0.5 h-0.5 bg-primary\"></span></button><button type=\"button\" data-testid=\"nav-link-lekciju-grafiks\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground\">Lekciju grafiks</button><button type=\"button\" data-testid=\"nav-link-majasdarbi\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground\">Mājasdarbi</button><button type=\"button\" data-testid=\"nav-link-studiju-platformas\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground\">Platformas</button><button type=\"button\" data-testid=\"nav-link-cels\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground\">Ceļš uz LU</button><button type=\"button\" data-testid=\"nav-link-brivais-laiks\" class=\"relative px-3 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground\">Brīvais laiks</button></nav><div class=\"flex items-center gap-2\"><button type=\"button\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 rounded-none border-border\" data-testid=\"dark-mode-toggle\" aria-label=\"Pārslēgt tēmu\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-moon\" aria-hidden=\"true\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"></path></svg></button><button type=\"button\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 lg:hidden rounded-none border-border\" data-testid=\"mobile-menu-toggle\" aria-label=\"Izvēlne\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-menu\" aria-hidden=\"true\"><path d=\"M4 12h16\"></path><path d=\"M4 18h16\"></path><path d=\"M4 6h16\"></path></svg></button></div></div></header><main><section id=\"sakums\" data-testid=\"section-sakums\" class=\"relative min-h-screen pt-24 pb-16 px-6 md:px-12 lg:px-20 flex items-center overflow-hidden\"><div class=\"absolute inset-0 grid-lines opacity-40 pointer-events-none\"></div><div class=\"absolute inset-0 noise-overlay pointer-events-none\"></div><div class=\"relative w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end\"><div class=\"lg:col-span-8\"><div class=\"flex items-center gap-3 mb-6\"><span class=\"w-10 h-px bg-primary\"></span><span class=\"overline text-primary\" data-testid=\"hero-overline\">Nedēļas dienasgrāmata · 2025</span></div><h1 class=\"font-display text-5xl sm:text-6xl lg:text-[5.5rem] font-extrabold leading-[0.95] tracking-tighter\">Viena darba<br>nedēļa <span class=\"text-primary\">datorikas</span><br>studenta dzīvē.</h1><p class=\"mt-8 max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed\" data-testid=\"hero-description\">Sveiki! Mani sauc <strong class=\"text-foreground\">Jānis Bērziņš</strong>, un es esmu <strong class=\"text-foreground\">3. kursa students</strong> Latvijas Universitātes Datorikas fakultātē. Šeit dokumentēju, kā izskatās parasta darba nedēļa — lekcijas, projekti, ceļš uz Rīgas centru un retās miera minūtes starp kompilēšanas reizēm.</p><div class=\"mt-10 flex flex-wrap items-center gap-8 text-sm\"><div class=\"flex items-center gap-2 text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-graduation-cap text-primary\" aria-hidden=\"true\"><path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\"></path><path d=\"M22 10v6\"></path><path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\"></path></svg><span>LU DF · Bakalaurs</span></div><div class=\"flex items-center gap-2 text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin text-primary\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg><span>Jelgavas iela 3, Rīga</span></div><div class=\"flex items-center gap-2 text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-calendar-days text-primary\" aria-hidden=\"true\"><path d=\"M8 2v4\"></path><path d=\"M16 2v4\"></path><rect width=\"18\" height=\"18\" x=\"3\" y=\"4\" rx=\"2\"></rect><path d=\"M3 10h18\"></path><path d=\"M8 14h.01\"></path><path d=\"M12 14h.01\"></path><path d=\"M16 14h.01\"></path><path d=\"M8 18h.01\"></path><path d=\"M12 18h.01\"></path><path d=\"M16 18h.01\"></path></svg><span>Rudens semestris</span></div></div><button type=\"button\" data-testid=\"hero-scroll-button\" class=\"group mt-14 inline-flex items-center gap-3 border border-border px-5 py-3 hover:bg-foreground hover:text-background transition-colors\"><span class=\"overline\">Apskatīt nedēļu</span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-down group-hover:translate-y-0.5 transition-transform\" aria-hidden=\"true\"><path d=\"M12 5v14\"></path><path d=\"m19 12-7 7-7-7\"></path></svg></button></div><div class=\"lg:col-span-4 relative\"><div class=\"aspect-square border border-border bg-[hsl(var(--surface))] relative overflow-hidden\"><div class=\"absolute inset-0 grid-lines opacity-60\"></div><div class=\"absolute inset-0 flex items-center justify-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"180\" height=\"180\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-code-xml text-primary\" aria-hidden=\"true\" data-testid=\"hero-icon\"><path d=\"m18 16 4-4-4-4\"></path><path d=\"m6 8-4 4 4 4\"></path><path d=\"m14.5 4-5 16\"></path></svg></div><div class=\"absolute top-4 left-4 overline text-muted-foreground\">ID / 2022.DF.3K</div><div class=\"absolute bottom-4 left-4 right-4 flex items-end justify-between\"><div><div class=\"overline text-muted-foreground\">Programma</div><div class=\"font-display font-semibold text-base\">Datorzinātnes</div></div><div class=\"text-right\"><div class=\"overline text-muted-foreground\">Semestris</div><div class=\"font-mono text-sm\">05/06</div></div></div></div><div class=\"mt-3 flex items-center justify-between overline text-muted-foreground\"><span>No Pirmdienas</span><span>Līdz Piektdienai</span></div></div></div></section><section id=\"lekciju-grafiks\" data-testid=\"section-lekciju-grafiks\" class=\"relative py-24 md:py-32 px-6 md:px-12 lg:px-20 border-t border-border\"><div class=\"max-w-7xl mx-auto\"><div class=\"grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16\"><div class=\"lg:col-span-4\"><div class=\"overline text-primary mb-4\">02 / Sadaļa</div><h2 class=\"font-display text-4xl md:text-5xl font-bold tracking-tight\">Lekciju<br>grafiks</h2></div><div class=\"lg:col-span-7 lg:col-start-6 flex items-center\"><p class=\"text-base md:text-lg text-muted-foreground leading-relaxed\">Nedēļas ritms balstās uz pieciem darba rītiem. Klātienes nodarbības notiek LU Datorikas fakultātē Jelgavas ielā 3, bet daļa kursu — Zoom vai MS Teams platformās. Brīvdienas rezervētas mājasdarbiem un atpūtai.</p></div></div><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 border-l border-t border-border\"><div data-testid=\"schedule-day-pr\" class=\"border-r border-b border-border p-5 hover:bg-[hsl(var(--surface))] transition-colors min-h-[320px] flex flex-col\"><div class=\"flex items-baseline justify-between mb-4\"><h3 class=\"font-display font-bold text-lg\">Pirmdiena</h3><span class=\"font-mono text-xs text-muted-foreground\">Pr</span></div><div class=\"flex flex-col gap-4\"><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>10:30 – 12:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Programmēšana II</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>221. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>12:30 – 14:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Diskrētā matemātika</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>315. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>16:30 – 18:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Angļu valoda (IT)</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg>Zoom</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-accent text-accent\">Tiešsaiste</div></div></div></div></div><div data-testid=\"schedule-day-ot\" class=\"border-r border-b border-border p-5 hover:bg-[hsl(var(--surface))] transition-colors min-h-[320px] flex flex-col\"><div class=\"flex items-baseline justify-between mb-4\"><h3 class=\"font-display font-bold text-lg\">Otrdiena</h3><span class=\"font-mono text-xs text-muted-foreground\">Ot</span></div><div class=\"flex flex-col gap-4\"><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>08:30 – 10:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Datu struktūras</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg>MS Teams</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-accent text-accent\">Tiešsaiste</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>10:30 – 12:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Algoritmi</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>223. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div></div></div><div data-testid=\"schedule-day-tr\" class=\"border-r border-b border-border p-5 hover:bg-[hsl(var(--surface))] transition-colors min-h-[320px] flex flex-col\"><div class=\"flex items-baseline justify-between mb-4\"><h3 class=\"font-display font-bold text-lg\">Trešdiena</h3><span class=\"font-mono text-xs text-muted-foreground\">Tr</span></div><div class=\"flex flex-col gap-4\"><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>12:30 – 14:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Datu bāzes</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>113. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>14:30 – 16:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Datu bāzes (praktiskās)</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>113. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>18:15 – 19:45</div><div class=\"font-semibold text-sm leading-snug mb-2\">Operētājsistēmas</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg>Zoom</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-accent text-accent\">Tiešsaiste</div></div></div></div></div><div data-testid=\"schedule-day-ce\" class=\"border-r border-b border-border p-5 hover:bg-[hsl(var(--surface))] transition-colors min-h-[320px] flex flex-col\"><div class=\"flex items-baseline justify-between mb-4\"><h3 class=\"font-display font-bold text-lg\">Ceturtdiena</h3><span class=\"font-mono text-xs text-muted-foreground\">Ce</span></div><div class=\"flex flex-col gap-4\"><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>10:30 – 12:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Mākslīgais intelekts</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg>MS Teams</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-accent text-accent\">Tiešsaiste</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>12:30 – 14:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Tīmekļa tehnoloģijas</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>225. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div></div></div><div data-testid=\"schedule-day-pk\" class=\"border-r border-b border-border p-5 hover:bg-[hsl(var(--surface))] transition-colors min-h-[320px] flex flex-col\"><div class=\"flex items-baseline justify-between mb-4\"><h3 class=\"font-display font-bold text-lg\">Piektdiena</h3><span class=\"font-mono text-xs text-muted-foreground\">Pk</span></div><div class=\"flex flex-col gap-4\"><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>08:30 – 10:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Programmatūras inženierija</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-map-pin\" aria-hidden=\"true\"><path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg>317. aud.</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-primary text-primary\">Klātiene</div></div></div><div class=\"border-l-2 border-primary/60 pl-3\"><div class=\"flex items-center gap-1.5 text-xs text-muted-foreground font-mono mb-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>10:30 – 12:00</div><div class=\"font-semibold text-sm leading-snug mb-2\">Seminārs: kursa projekts</div><div class=\"flex items-center justify-between\"><span class=\"inline-flex items-center gap-1 text-xs text-muted-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg>Zoom</span><div class=\"inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none text-[0.65rem] px-1.5 py-0 border-accent text-accent\">Tiešsaiste</div></div></div></div></div></div></div></section><section id=\"majasdarbi\" data-testid=\"section-majasdarbi\" class=\"relative py-24 md:py-32 px-6 md:px-12 lg:px-20 border-t border-border bg-[hsl(var(--surface))]\"><div class=\"max-w-7xl mx-auto\"><div class=\"grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16\"><div class=\"lg:col-span-4\"><div class=\"overline text-primary mb-4\">03 / Sadaļa</div><h2 class=\"font-display text-4xl md:text-5xl font-bold tracking-tight\">Mājasdarbi<br>un projekti</h2></div><div class=\"lg:col-span-7 lg:col-start-6 flex items-center\"><p class=\"text-base md:text-lg text-muted-foreground leading-relaxed\">Pēc lekcijām dienas otrā puse pieder patstāvīgajam darbam. Šobrīd paralēli strādāju pie sešiem kursiem — no rekursijas uzdevumiem līdz pilnvērtīgam tīmekļa projektam. Katrs no tiem prasa plānošanu un disciplinētu laika sadalījumu.</p></div></div><div class=\"grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-4\"><article data-testid=\"homework-card-0\" class=\"md:col-span-4 lg:col-span-5 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-file-code2 lucide-file-code-2\" aria-hidden=\"true\"><path d=\"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4\"></path><path d=\"M14 2v4a2 2 0 0 0 2 2h4\"></path><path d=\"m5 12-3 3 3 3\"></path><path d=\"m9 18 3-3-3-3\"></path></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle text-accent\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg><span class=\"text-accent\">aktīvs</span></div></div><div class=\"overline text-muted-foreground mb-2\">Programmēšana II</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">Rekursijas uzdevumu kopa</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Otrdien, 23:59</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(-35%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">65%</span></div></article><article data-testid=\"homework-card-1\" class=\"md:col-span-4 lg:col-span-4 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-binary\" aria-hidden=\"true\"><rect x=\"14\" y=\"14\" width=\"4\" height=\"6\" rx=\"2\"></rect><rect x=\"6\" y=\"4\" width=\"4\" height=\"6\" rx=\"2\"></rect><path d=\"M6 20h4\"></path><path d=\"M14 10h4\"></path><path d=\"M6 14h2v6\"></path><path d=\"M14 4h2v6\"></path></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle text-accent\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg><span class=\"text-accent\">aktīvs</span></div></div><div class=\"overline text-muted-foreground mb-2\">Algoritmi</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">Grafu algoritmu analīze</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Ceturtdien</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(-70%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">30%</span></div></article><article data-testid=\"homework-card-2\" class=\"md:col-span-4 lg:col-span-3 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-database\" aria-hidden=\"true\"><ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\"></ellipse><path d=\"M3 5V19A9 3 0 0 0 21 19V5\"></path><path d=\"M3 12A9 3 0 0 0 21 12\"></path></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle text-accent\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg><span class=\"text-accent\">aktīvs</span></div></div><div class=\"overline text-muted-foreground mb-2\">Datu bāzes</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">SQL vaicājumu projekts</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Piektdien</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(-20%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">80%</span></div></article><article data-testid=\"homework-card-3\" class=\"md:col-span-4 lg:col-span-4 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-brain-circuit\" aria-hidden=\"true\"><path d=\"M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z\"></path><path d=\"M9 13a4.5 4.5 0 0 0 3-4\"></path><path d=\"M6.003 5.125A3 3 0 0 0 6.401 6.5\"></path><path d=\"M3.477 10.896a4 4 0 0 1 .585-.396\"></path><path d=\"M6 18a4 4 0 0 1-1.967-.516\"></path><path d=\"M12 13h4\"></path><path d=\"M12 18h6a2 2 0 0 1 2 2v1\"></path><path d=\"M12 8h8\"></path><path d=\"M16 8V5a2 2 0 0 1 2-2\"></path><circle cx=\"16\" cy=\"13\" r=\".5\"></circle><circle cx=\"18\" cy=\"3\" r=\".5\"></circle><circle cx=\"20\" cy=\"21\" r=\".5\"></circle><circle cx=\"20\" cy=\"8\" r=\".5\"></circle></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle text-accent\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg><span class=\"text-accent\">uzsākts</span></div></div><div class=\"overline text-muted-foreground mb-2\">Mākslīgais intelekts</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">Klasifikācijas modelis (Python)</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Nākamā nedēļa</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(-85%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">15%</span></div></article><article data-testid=\"homework-card-4\" class=\"md:col-span-4 lg:col-span-5 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-earth\" aria-hidden=\"true\"><path d=\"M21.54 15H17a2 2 0 0 0-2 2v4.54\"></path><path d=\"M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17\"></path><path d=\"M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05\"></path><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle text-accent\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg><span class=\"text-accent\">aktīvs</span></div></div><div class=\"overline text-muted-foreground mb-2\">Tīmekļa tehnoloģijas</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">React + FastAPI kursa projekts</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Semestra beigās</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(-55%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">45%</span></div></article><article data-testid=\"homework-card-5\" class=\"md:col-span-4 lg:col-span-3 border border-border bg-background p-6 hover:border-primary transition-colors group relative\"><div class=\"flex items-start justify-between mb-5\"><div class=\"w-11 h-11 border border-border bg-[hsl(var(--surface))] flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-check\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m9 12 2 2 4-4\"></path></svg></div><div class=\"flex items-center gap-1.5 overline\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-check text-primary\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m9 12 2 2 4-4\"></path></svg><span class=\"text-primary\">Pabeigts</span></div></div><div class=\"overline text-muted-foreground mb-2\">Diskrētā matemātika</div><h3 class=\"font-display font-semibold text-lg leading-snug mb-5\">Kolokvijs Nr. 2</h3><div class=\"flex items-center gap-2 text-xs text-muted-foreground font-mono mb-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg><span>Termiņš: Pagājis</span></div><div aria-valuemax=\"100\" aria-valuemin=\"0\" role=\"progressbar\" data-state=\"indeterminate\" data-max=\"100\" class=\"relative w-full overflow-hidden bg-primary/20 h-1 rounded-none\"><div data-state=\"indeterminate\" data-max=\"100\" class=\"h-full w-full flex-1 bg-primary transition-all\" style=\"transform: translateX(0%);\"></div></div><div class=\"flex items-center justify-between mt-2 overline\"><span class=\"text-muted-foreground\">Izpilde</span><span class=\"text-foreground font-mono\">100%</span></div></article></div></div></section><section id=\"studiju-platformas\" data-testid=\"section-studiju-platformas\" class=\"relative py-24 md:py-32 px-6 md:px-12 lg:px-20 border-t border-border\"><div class=\"max-w-7xl mx-auto\"><div class=\"grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16\"><div class=\"lg:col-span-4\"><div class=\"overline text-primary mb-4\">04 / Sadaļa</div><h2 class=\"font-display text-4xl md:text-5xl font-bold tracking-tight\">Studiju<br>platformas</h2></div><div class=\"lg:col-span-7 lg:col-start-6 flex items-center\"><p class=\"text-base md:text-lg text-muted-foreground leading-relaxed\">Studiju darbplūsma balstās uz vairākām platformām, kas savstarpēji papildina viena otru. e-studijas ir centrs visam kursu saturam, bet Zoom un Teams nodrošina dzīvo kontaktu gan ar pasniedzējiem, gan kursabiedriem.</p></div></div><div class=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-l border-t border-border\"><div data-testid=\"platform-0\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-graduation-cap text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\"></path><path d=\"M22 10v6\"></path><path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\"></path></svg><span class=\"overline text-muted-foreground\">01</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">LU e-studijas</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Kursu materiāli, mājasdarbu iesniegšana, atzīmes</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Katru dienu</span></div></div><div data-testid=\"platform-1\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-book-open text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M12 7v14\"></path><path d=\"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z\"></path></svg><span class=\"overline text-muted-foreground\">02</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">Moodle</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Testi, uzdevumu kopas, kolokviji tiešsaistē</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Iknedēļas</span></div></div><div data-testid=\"platform-2\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-video text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\"></path><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\"></rect></svg><span class=\"overline text-muted-foreground\">03</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">Zoom</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Tiešsaistes lekcijas, konsultācijas ar docētājiem</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">3x nedēļā</span></div></div><div data-testid=\"platform-3\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-users text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path><path d=\"M16 3.128a4 4 0 0 1 0 7.744\"></path><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle></svg><span class=\"overline text-muted-foreground\">04</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">MS Teams</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Grupu darbs, kursa projekti, sapulces</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Bieži</span></div></div><div data-testid=\"platform-4\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-github text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4\"></path><path d=\"M9 18c-4.51 2-5-2-7-2\"></path></svg><span class=\"overline text-muted-foreground\">05</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">GitHub</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Kodu repozitoriji, komandas projekti, portfolio</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Ik dienu</span></div></div><div data-testid=\"platform-5\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-mail text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7\"></path><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"></rect></svg><span class=\"overline text-muted-foreground\">06</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">LU pasts</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Oficiālā saziņa ar pasniedzējiem un fakultāti</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Dienā pāris reižu</span></div></div><div data-testid=\"platform-6\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-folder-git2 lucide-folder-git-2 text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M9 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v5\"></path><circle cx=\"13\" cy=\"12\" r=\"2\"></circle><path d=\"M18 19c-2.8 0-5-2.2-5-5v8\"></path><circle cx=\"20\" cy=\"19\" r=\"2\"></circle></svg><span class=\"overline text-muted-foreground\">07</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">GitLab LU</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Iekšējie fakultātes projekti un uzdevumu repozitoriji</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Projektu laikā</span></div></div><div data-testid=\"platform-7\" class=\"border-r border-b border-border p-6 relative group cursor-default hover:bg-[hsl(var(--surface))] transition-all\"><div class=\"flex items-center justify-between mb-8\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-message-square text-foreground group-hover:text-primary transition-colors\" aria-hidden=\"true\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"></path></svg><span class=\"overline text-muted-foreground\">08</span></div><h3 class=\"font-display font-semibold text-xl mb-2\">Discord</h3><p class=\"text-sm text-muted-foreground leading-relaxed mb-6 min-h-[3rem]\">Kursabiedru čati, palīdzība mājasdarbos</p><div class=\"pt-4 border-t border-border/60 flex items-center justify-between\"><span class=\"overline text-muted-foreground\">Lietojums</span><span class=\"font-mono text-xs text-primary\">Vakaros</span></div></div></div></div></section><section id=\"cels\" data-testid=\"section-cels\" class=\"relative py-24 md:py-32 px-6 md:px-12 lg:px-20 border-t border-border bg-[hsl(var(--surface))]\"><div class=\"max-w-7xl mx-auto\"><div class=\"grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16\"><div class=\"lg:col-span-4\"><div class=\"overline text-primary mb-4\">05 / Sadaļa</div><h2 class=\"font-display text-4xl md:text-5xl font-bold tracking-tight\">Ceļš uz<br>universitāti</h2></div><div class=\"lg:col-span-7 lg:col-start-6 flex items-center\"><p class=\"text-base md:text-lg text-muted-foreground leading-relaxed\">Dzīvoju Imantā, tāpēc katrs rīts sākas ar vilcienu uz Rīgas centru. Ikdienas rutīna ir izmērīta līdz minūtei — tā, lai paspētu kafiju un vēl īsu pārskatu par dienas uzdevumiem, pirms iekāpju auditorijā.</p></div></div><div class=\"relative\"><div class=\"absolute left-4 md:left-8 top-2 bottom-2 w-px bg-border\"></div><div class=\"flex flex-col gap-2\"><div data-testid=\"commute-step-0\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sunrise\" aria-hidden=\"true\"><path d=\"M12 2v8\"></path><path d=\"m4.93 10.93 1.41 1.41\"></path><path d=\"M2 18h2\"></path><path d=\"M20 18h2\"></path><path d=\"m19.07 10.93-1.41 1.41\"></path><path d=\"M22 22H2\"></path><path d=\"m8 6 4-4 4 4\"></path><path d=\"M16 18a4 4 0 0 0-8 0\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">06:45</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Modinātājs Imantā</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Ātra duša, silta auzu putra un pirmā kafija — bez tās nekur tālāk netieku.</p></div></div></div><div data-testid=\"commute-step-1\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-coffee\" aria-hidden=\"true\"><path d=\"M10 2v2\"></path><path d=\"M14 2v2\"></path><path d=\"M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1\"></path><path d=\"M6 2v2\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">07:30</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Īsa pastaiga</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">8 minūšu gājiens līdz Imantas stacijai. Šajā laikā pārskatu dienas grafiku e-studijās.</p></div></div></div><div data-testid=\"commute-step-2\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-tram-front\" aria-hidden=\"true\"><rect width=\"16\" height=\"16\" x=\"4\" y=\"3\" rx=\"2\"></rect><path d=\"M4 11h16\"></path><path d=\"M12 3v8\"></path><path d=\"m8 19-2 3\"></path><path d=\"m18 22-2-3\"></path><path d=\"M8 15h.01\"></path><path d=\"M16 15h.01\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">07:48</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Vilciens uz Rīgu</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Imanta → Rīga pasažieru stacija. Ceļā parasti klausos podkāstu vai lasu lekciju konspektu.</p></div></div></div><div data-testid=\"commute-step-3\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-footprints\" aria-hidden=\"true\"><path d=\"M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z\"></path><path d=\"M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z\"></path><path d=\"M16 17h4\"></path><path d=\"M4 13h4\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">08:05</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">No stacijas uz fakultāti</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Pa Gogoļa un Jelgavas ielu līdz LU DF ēkai. Apmēram 20 minūšu rāms gājiens.</p></div></div></div><div data-testid=\"commute-step-4\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-building2 lucide-building-2\" aria-hidden=\"true\"><path d=\"M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z\"></path><path d=\"M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2\"></path><path d=\"M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2\"></path><path d=\"M10 6h4\"></path><path d=\"M10 10h4\"></path><path d=\"M10 14h4\"></path><path d=\"M10 18h4\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">08:30</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Ierodos LU Datorikas fakultātē</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Jelgavas iela 3 — iekārtojos auditorijā un pievienojos Wi-Fi tīklam pirms lekcijas.</p></div></div></div><div data-testid=\"commute-step-5\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-book-open-check\" aria-hidden=\"true\"><path d=\"M12 21V7\"></path><path d=\"m16 12 2 2 4-4\"></path><path d=\"M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">15:30</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Darbs bibliotēkā</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Pēc lekcijām parasti paliku vēl pāris stundas Nacionālajā bibliotēkā vai DF lasītavā.</p></div></div></div><div data-testid=\"commute-step-6\" class=\"relative pl-14 md:pl-24 py-4 group\"><div class=\"absolute left-0 md:left-4 top-4 w-9 h-9 border border-border bg-background flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-house\" aria-hidden=\"true\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"></path><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"></path></svg></div><div class=\"flex flex-col md:flex-row md:items-baseline md:gap-6\"><div class=\"font-mono text-sm text-primary min-w-[4rem]\">18:20</div><div class=\"flex-1 pt-1 md:pt-0\"><h3 class=\"font-display font-semibold text-lg leading-snug mb-1\">Atpakaļceļš mājās</h3><p class=\"text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl\">Vilciens atpakaļ uz Imantu, siltas vakariņas un pēdējie mājasdarbu pieskārieni.</p></div></div></div></div></div></div></section><section id=\"brivais-laiks\" data-testid=\"section-brivais-laiks\" class=\"relative py-24 md:py-32 px-6 md:px-12 lg:px-20 border-t border-border\"><div class=\"max-w-7xl mx-auto\"><div class=\"grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16\"><div class=\"lg:col-span-4\"><div class=\"overline text-primary mb-4\">06 / Sadaļa</div><h2 class=\"font-display text-4xl md:text-5xl font-bold tracking-tight\">Brīvais<br>laiks</h2></div><div class=\"lg:col-span-7 lg:col-start-6 flex items-center\"><p class=\"text-base md:text-lg text-muted-foreground leading-relaxed\">Studijas nav viss. Starp kompilatoriem un kolokvijiem cenšos atrast laiku sev — fiziskām aktivitātēm, mūzikai, spēlēm un ceļojumiem. Tas ir tas, kas ļauj saglabāt skaidru prātu visu semestri.</p></div></div><div class=\"grid grid-cols-1 md:grid-cols-6 gap-4\"><article data-testid=\"hobby-0\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-6 lg:col-span-4 md:row-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">3x nedēļā</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"72\" height=\"72\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-dumbbell text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><path d=\"M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z\"></path><path d=\"m2.5 21.5 1.4-1.4\"></path><path d=\"m20.1 3.9 1.4-1.4\"></path><path d=\"M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z\"></path><path d=\"m9.6 14.4 4.8-4.8\"></path></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-3xl md:text-4xl\">Sports un skriešana</h3><p class=\"text-muted-foreground leading-relaxed text-base md:text-lg max-w-xl\">Trīs reizes nedēļā eju uz trenažieru zāli, un sestdienās cenšos noskriet 5–8 km gar Daugavu. Fiziskā slodze ir mans labākais antidots pēc garām kodēšanas sesijām.</p></article><article data-testid=\"hobby-1\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-3 lg:col-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">Mēnesī reizi</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-users-round text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><path d=\"M18 21a8 8 0 0 0-16 0\"></path><circle cx=\"10\" cy=\"8\" r=\"5\"></circle><path d=\"M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3\"></path></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-xl\">Hakatoni un kopiena</h3><p class=\"text-muted-foreground leading-relaxed text-sm\">Piedalos LU Datorikas fakultātes hakatonos un Garāžas tikšanās reizēs — tur iepazīstu citus studentus un topošos kolēģus.</p></article><article data-testid=\"hobby-2\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-3 lg:col-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">Vakaros</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-gamepad2 lucide-gamepad-2 text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><line x1=\"6\" x2=\"10\" y1=\"11\" y2=\"11\"></line><line x1=\"8\" x2=\"8\" y1=\"9\" y2=\"13\"></line><line x1=\"15\" x2=\"15.01\" y1=\"12\" y2=\"12\"></line><line x1=\"18\" x2=\"18.01\" y1=\"10\" y2=\"10\"></line><path d=\"M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z\"></path></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-xl\">Spēles</h3><p class=\"text-muted-foreground leading-relaxed text-sm\">Vakaros ar kursabiedriem spēlējam Valorant vai kooperatīvas indie spēles. Laba atslēgšanās no koda.</p></article><article data-testid=\"hobby-3\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-3 lg:col-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">Ik dienu</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-music4 lucide-music-4 text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><path d=\"M9 18V5l12-2v13\"></path><path d=\"m9 9 12-2\"></path><circle cx=\"6\" cy=\"18\" r=\"3\"></circle><circle cx=\"18\" cy=\"16\" r=\"3\"></circle></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-xl\">Mūzika</h3><p class=\"text-muted-foreground leading-relaxed text-sm\">Lofi un elektroniskā mūzika lekcijās, post-rock — kodējot. Spotify atskaņošanas saraksti ir mans darba rīks.</p></article><article data-testid=\"hobby-4\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-3 lg:col-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">Brīvdienās</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-mountain text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><path d=\"m8 3 4 8 5-5 5 15H2L8 3z\"></path></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-xl\">Dabas pārgājieni</h3><p class=\"text-muted-foreground leading-relaxed text-sm\">Brīvdienās kopā ar draugiem dodamies uz Gauju vai Siguldu — garš gājiens, bez telefona, bez termināļa.</p></article><article data-testid=\"hobby-5\" class=\"relative border border-border bg-background p-6 md:p-8 hover:border-primary transition-colors group overflow-hidden md:col-span-3 lg:col-span-2\"><div class=\"absolute top-6 right-6 overline text-muted-foreground\">Svētdienās</div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-film text-primary mb-6 group-hover:scale-105 transition-transform origin-left\" aria-hidden=\"true\"><rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\"></rect><path d=\"M7 3v18\"></path><path d=\"M3 7.5h4\"></path><path d=\"M3 12h18\"></path><path d=\"M3 16.5h4\"></path><path d=\"M17 3v18\"></path><path d=\"M17 7.5h4\"></path><path d=\"M17 16.5h4\"></path></svg><h3 class=\"font-display font-bold tracking-tight mb-3 text-xl\">Filmas un seriāli</h3><p class=\"text-muted-foreground leading-relaxed text-sm\">Iecienītākais žanrs — sci-fi un dokumentālās filmas par tehnoloģiju vēsturi. Ideāla vakara rituāla sastāvdaļa.</p></article></div></div></section></main><footer data-testid=\"footer\" class=\"border-t border-border bg-background px-6 md:px-12 lg:px-20 py-10\"><div class=\"max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start\"><div class=\"flex items-center gap-3\"><div class=\"w-9 h-9 bg-primary text-primary-foreground flex items-center justify-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-terminal\" aria-hidden=\"true\"><polyline points=\"4 17 10 11 4 5\"></polyline><line x1=\"12\" x2=\"20\" y1=\"19\" y2=\"19\"></line></svg></div><div><div class=\"font-display font-bold text-sm\">Jānis Bērziņš</div><div class=\"overline text-muted-foreground\">LU Datorika · 3. kurss</div></div></div><div class=\"text-sm text-muted-foreground leading-relaxed md:col-span-1\">Vienas darba nedēļas dienasgrāmata — lekcijas, mājasdarbi, platformas, ceļojumi un atelpas brīži datorikas studenta dzīvē.</div><div class=\"md:text-right\"><div class=\"overline text-muted-foreground mb-1\">© 2025</div><div class=\"font-mono text-xs text-muted-foreground\">Latvijas Universitāte · Datorikas fakultāte</div></div></div></footer></div>";
 
-type Day = {
-  day: string;
-  time: string;
-  title: string;
-  note: string;
-  load: "high" | "medium" | "calm";
-};
-
-type Homework = {
-  course: string;
-  title: string;
-  deadline: string;
-  status: string;
-  progress: number;
-  span?: "wide";
-};
-
-type Platform = {
-  name: string;
-  purpose: string;
-  usage: string;
-};
-
-type CommuteStep = {
-  time: string;
-  title: string;
-  desc: string;
-};
-
-type Hobby = {
-  title: string;
-  desc: string;
-  tag: string;
-  big?: boolean;
-};
-
-const navItems: NavItem[] = [
-  { id: "sakums", label: "Sākums" },
-  { id: "lekcijas", label: "Lekcijas" },
-  { id: "majasdarbi", label: "Mājasdarbi" },
-  { id: "platformas", label: "Platformas" },
-  { id: "cels", label: "Ceļš" },
-  { id: "brivais-laiks", label: "Brīvais laiks" },
-];
-
-const week: Day[] = [
-  {
-    day: "Pirmdiena",
-    time: "08:30 - 14:00",
-    title: "Programmēšana klātienē",
-    note: "Nedēļas plāna pārbaude, lekcija auditorijā un kodēšanas uzdevumi.",
-    load: "high",
-  },
-  {
-    day: "Otrdiena",
-    time: "10:15 - 15:40",
-    title: "Datubāzes un vaicājumi",
-    note: "SQL piemēri, praktiskais darbs un īsa konsultācija Teams vidē.",
-    load: "medium",
-  },
-  {
-    day: "Trešdiena",
-    time: "09:00 - 16:00",
-    title: "Algoritmi",
-    note: "Grūtākā diena, jo daudz jādomā par uzdevumu loģiku un kļūdām.",
-    load: "high",
-  },
-  {
-    day: "Ceturtdiena",
-    time: "12:30 - 17:10",
-    title: "Web tehnoloģijas",
-    note: "HTML, CSS, JavaScript un lapas pielāgošana dažādiem ekrāniem.",
-    load: "medium",
-  },
-  {
-    day: "Piektdiena",
-    time: "11:00 - 13:20",
-    title: "Projekta labojumi",
-    note: "Mierīgāka diena: pārbaudu iesniegumus un sakārtoju nākamās nedēļas darbus.",
-    load: "calm",
-  },
-];
-
-const homework: Homework[] = [
-  {
-    course: "Programmēšana",
-    title: "Funkciju tests un kļūdu labošana",
-    deadline: "Otrdiena, 23:59",
-    status: "Procesā",
-    progress: 68,
-    span: "wide",
-  },
-  {
-    course: "Datubāzes",
-    title: "SQL vaicājumu kopa",
-    deadline: "Trešdiena, 20:00",
-    status: "Pabeigts",
-    progress: 100,
-  },
-  {
-    course: "Web tehnoloģijas",
-    title: "Responsīva vienas lapas mājaslapa",
-    deadline: "Piektdiena, 23:59",
-    status: "Jāpārbauda",
-    progress: 84,
-  },
-  {
-    course: "Algoritmi",
-    title: "Rekursijas uzdevumi",
-    deadline: "Svētdiena, 18:00",
-    status: "Procesā",
-    progress: 46,
-  },
-  {
-    course: "Grupas projekts",
-    title: "Sadalīt uzdevumus un apvienot kodu",
-    deadline: "Nākamā pirmdiena",
-    status: "Plānots",
-    progress: 25,
-  },
-];
-
-const platforms: Platform[] = [
-  {
-    name: "LU e-studijas",
-    purpose: "Lekciju materiāli, mājasdarbu apraksti, termiņi un vērtējumi.",
-    usage: "Katru dienu",
-  },
-  {
-    name: "Microsoft Teams",
-    purpose: "Saziņa ar pasniedzējiem, grupas darbs un tiešsaistes nodarbības.",
-    usage: "Bieži",
-  },
-  {
-    name: "Zoom",
-    purpose: "Lekcijas un konsultācijas, kad nodarbība notiek attālināti.",
-    usage: "Dažas reizes nedēļā",
-  },
-  {
-    name: "GitHub",
-    purpose: "Koda glabāšana, projekta versijas un komandas darba pārskatīšana.",
-    usage: "Projektu laikā",
-  },
-];
-
-const commute: CommuteStep[] = [
-  {
-    time: "06:45",
-    title: "Rīta pārbaude",
-    desc: "Paskatos grafiku, ielieku somā datoru, lādētāju un pierakstus.",
-  },
-  {
-    time: "07:30",
-    title: "Ceļš līdz transportam",
-    desc: "Īsa pastaiga un ziņu pārskatīšana Teams, kamēr vēl mēģinu pamosties.",
-  },
-  {
-    time: "08:10",
-    title: "Brauciens uz universitāti",
-    desc: "Transportā klausos mūziku vai pārlasu mājasdarba noteikumus.",
-  },
-  {
-    time: "08:55",
-    title: "Ierašanās fakultātē",
-    desc: "Satieku kursabiedrus un pirms lekcijas salīdzinu, kas kuram sanācis.",
-  },
-];
-
-const hobbies: Hobby[] = [
-  {
-    title: "Sports un pastaigas",
-    desc: "Pēc vairākām stundām pie datora palīdz kustība: sporta zāle, pastaiga vai vienkārši svaigs gaiss.",
-    tag: "3x nedēļā",
-    big: true,
-  },
-  {
-    title: "Spēles",
-    desc: "Vakaros ar draugiem uzspēlēju kooperatīvas spēles, lai pārslēgtos no mācībām.",
-    tag: "Vakaros",
-  },
-  {
-    title: "Filmas",
-    desc: "Kad nav steidzamu termiņu, paskatos filmu vai seriālu un atlieku datoru malā.",
-    tag: "Brīvdienās",
-  },
-  {
-    title: "Draugi",
-    desc: "Sarunas ar kursabiedriem bieži palīdz saprast uzdevumu labāk nekā vēl viena dokumentācijas lapa.",
-    tag: "Pēc lekcijām",
-  },
+const sectionIds = [
+  "sakums",
+  "lekciju-grafiks",
+  "majasdarbi",
+  "studiju-platformas",
+  "cels",
+  "brivais-laiks",
 ];
 
 export default function Home() {
-  const [dark, setDark] = useState(false);
-
   useEffect(() => {
-    const saved = window.localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDark(saved ? saved === "dark" : prefersDark);
+    const root = document.documentElement;
+    const savedTheme = window.localStorage.getItem("theme");
+    if (savedTheme === "dark") root.classList.add("dark");
+
+    const scrollToSection = (id: string) => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const logo = document.querySelector('[data-testid="logo-button"]');
+    logo?.addEventListener("click", () => scrollToSection("sakums"));
+
+    const hero = document.querySelector('[data-testid="hero-scroll-button"]');
+    hero?.addEventListener("click", () => scrollToSection("lekciju-grafiks"));
+
+    sectionIds.forEach((id) => {
+      const button = document.querySelector('[data-testid="nav-link-' + id + '"]');
+      button?.addEventListener("click", () => scrollToSection(id));
+    });
+
+    const themeToggle = document.querySelector('[data-testid="dark-mode-toggle"]');
+    themeToggle?.addEventListener("click", () => {
+      root.classList.toggle("dark");
+      window.localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+    });
   }, []);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = dark ? "dark" : "light";
-    window.localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
-
-  return (
-    <main className="app-shell">
-      <header className="site-header">
-        <a className="brand" href="#sakums" aria-label="Uz sākumu">
-          <span className="brand-mark">LU</span>
-          <span>
-            Datorikas nedēļa
-            <small>studenta dienasgrāmata</small>
-          </span>
-        </a>
-
-        <nav className="nav" aria-label="Galvenā navigācija">
-          {navItems.map((item) => (
-            <a key={item.id} href={`#${item.id}`}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <button
-          className="theme-toggle"
-          type="button"
-          aria-label={dark ? "Ieslēgt gaišo režīmu" : "Ieslēgt tumšo režīmu"}
-          onClick={() => setDark((value) => !value)}
-        >
-          <span aria-hidden="true">{dark ? "☀" : "●"}</span>
-          <span>{dark ? "Gaišais" : "Tumšais"}</span>
-        </button>
-      </header>
-
-      <section className="hero section-pad" id="sakums">
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <p className="overline">Latvijas Universitāte / Datorikas fakultāte</p>
-            <h1>Viena darba nedēļa datorikas studenta dzīvē</h1>
-            <p className="lead">
-              Lapa parāda studenta ikdienu: lekcijas, mājasdarbus, platformas,
-              ceļu uz universitāti un brīvo laiku. Dizains ir sakārtots kā
-              dienasgrāmata ar īsiem blokiem, lai nedēļu var ātri pārskatīt.
-            </p>
-            <div className="hero-actions">
-              <a className="primary-link" href="#lekcijas">
-                Skatīt nedēļu
-              </a>
-              <span className="byline">Autors: Staņislavs Students</span>
-            </div>
-          </div>
-
-          <div className="hero-panel" aria-label="Nedēļas kopsavilkums">
-            <div className="panel-top">
-              <span>03. kurss</span>
-              <strong>DF</strong>
-            </div>
-            <div className="focus-card">
-              <p className="overline">Šonedēļ fokusā</p>
-              <h2>Termiņi, kods un normāls miegs</h2>
-            </div>
-            <div className="metric-grid">
-              <div>
-                <strong>5</strong>
-                <span>studiju dienas</span>
-              </div>
-              <div>
-                <strong>4</strong>
-                <span>platformas</span>
-              </div>
-              <div>
-                <strong>30+</strong>
-                <span>ceļa minūtes</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-pad band" id="lekcijas">
-        <SectionIntro
-          number="01"
-          title="Lekciju grafiks"
-          text="Nedēļa mainās atkarībā no termiņiem, bet ritms parasti ir līdzīgs: klātienes lekcijas, praktiskie darbi un daļa nodarbību tiešsaistē."
-        />
-        <div className="week-grid">
-          {week.map((item) => (
-            <article className={`day-card ${item.load}`} key={item.day}>
-              <div className="card-head">
-                <span>{item.time}</span>
-                <i aria-hidden="true" />
-              </div>
-              <h3>{item.day}</h3>
-              <strong>{item.title}</strong>
-              <p>{item.note}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad" id="majasdarbi">
-        <SectionIntro
-          number="02"
-          title="Mājasdarbi un projekti"
-          text="Pēc lekcijām sākas patstāvīgais darbs. Visvairāk laika aizņem kļūdu meklēšana, dokumentācijas lasīšana un projektu salikšana kopā."
-        />
-        <div className="homework-grid">
-          {homework.map((item) => (
-            <article className={`homework-card ${item.span ?? ""}`} key={item.title}>
-              <div className="card-head">
-                <span>{item.course}</span>
-                <em>{item.status}</em>
-              </div>
-              <h3>{item.title}</h3>
-              <p>Termiņš: {item.deadline}</p>
-              <div
-                className="progress"
-                style={{ "--progress": `${item.progress}%` } as React.CSSProperties}
-                aria-label={`Izpilde ${item.progress}%`}
-              >
-                <span />
-              </div>
-              <div className="progress-meta">
-                <span>Izpilde</span>
-                <strong>{item.progress}%</strong>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad band" id="platformas">
-        <SectionIntro
-          number="03"
-          title="Studiju platformas"
-          text="Ikdienā viena platforma reti atrisina visu. Materiāli, sarunas, lekcijas un kods sadalās pa vairākām vietām."
-        />
-        <div className="platform-grid">
-          {platforms.map((item, index) => (
-            <article className="platform-card" key={item.name}>
-              <div className="platform-number">0{index + 1}</div>
-              <h3>{item.name}</h3>
-              <p>{item.purpose}</p>
-              <div>
-                <span>Lietojums</span>
-                <strong>{item.usage}</strong>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad" id="cels">
-        <SectionIntro
-          number="04"
-          title="Ceļš uz universitāti"
-          text="Klātienes dienās rīta rutīna ir gandrīz mehāniska, bet tieši tā palīdz nepazaudēt ritmu."
-        />
-        <div className="timeline">
-          {commute.map((item) => (
-            <article className="timeline-step" key={item.time}>
-              <time>{item.time}</time>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad band" id="brivais-laiks">
-        <SectionIntro
-          number="05"
-          title="Brīvais laiks"
-          text="Atpūta nav tikai balva pēc darba. Tā ir daļa no nedēļas, lai nākamajā dienā vispār būtu spēks klausīties lekcijās."
-        />
-        <div className="hobby-grid">
-          {hobbies.map((item) => (
-            <article className={`hobby-card ${item.big ? "big" : ""}`} key={item.title}>
-              <span>{item.tag}</span>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <footer className="footer">
-        <div>
-          <strong>Staņislavs Students</strong>
-          <span>LU Datorika / darba nedēļas apraksts</span>
-        </div>
-        <p>Vienas lapas mājaslapa par lekcijām, platformām, mājasdarbiem un atelpas brīžiem.</p>
-        <small>© 2026</small>
-      </footer>
-    </main>
-  );
-}
-
-function SectionIntro({ number, title, text }: { number: string; title: string; text: string }) {
-  return (
-    <div className="section-intro">
-      <div>
-        <p className="overline">{number} / Sadaļa</p>
-        <h2>{title}</h2>
-      </div>
-      <p>{text}</p>
-    </div>
-  );
+  return <div dangerouslySetInnerHTML={{ __html: appHtml }} />;
 }
