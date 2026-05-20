@@ -2,78 +2,226 @@
 
 import { useEffect, useState } from "react";
 
-type Section = {
+type NavItem = {
   id: string;
   label: string;
-  title: string;
-  kicker: string;
-  illustration: "schedule" | "tasks" | "platforms" | "route" | "free";
-  text: string;
 };
 
-const sections: Section[] = [
+type Day = {
+  day: string;
+  time: string;
+  title: string;
+  note: string;
+  load: "high" | "medium" | "calm";
+};
+
+type Homework = {
+  course: string;
+  title: string;
+  deadline: string;
+  status: string;
+  progress: number;
+  span?: "wide";
+};
+
+type Platform = {
+  name: string;
+  purpose: string;
+  usage: string;
+};
+
+type CommuteStep = {
+  time: string;
+  title: string;
+  desc: string;
+};
+
+type Hobby = {
+  title: string;
+  desc: string;
+  tag: string;
+  big?: boolean;
+};
+
+const navItems: NavItem[] = [
+  { id: "sakums", label: "Sākums" },
+  { id: "lekcijas", label: "Lekcijas" },
+  { id: "majasdarbi", label: "Mājasdarbi" },
+  { id: "platformas", label: "Platformas" },
+  { id: "cels", label: "Ceļš" },
+  { id: "brivais-laiks", label: "Brīvais laiks" },
+];
+
+const week: Day[] = [
   {
-    id: "lekcijas",
-    label: "Lekcijas",
-    title: "Lekciju grafiks",
-    kicker: "No rīta auditorijā, pēcpusdienā tiešsaistē",
-    illustration: "schedule",
-    text:
-      "Mana darba nedēļa parasti sākas ar nelielu plāna pārbaudi e-studijās. Pirmdienās man ir programmēšana klātienē, tāpēc uz universitāti dodos agrāk un pirms lekcijas vēl pārskatu iepriekšējo kodu. Otrdienās bieži ir datubāzes, kur vairāk strādājam ar vaicājumiem un piemēriem. Trešdienās parasti ir algoritmi, un tā ir viena no grūtākajām dienām, jo jākoncentrējas uz uzdevumu loģiku. Ceturtdienās notiek web tehnoloģijas, kur praktiski veidojam lapas un runājam par HTML, CSS un JavaScript. Piektdiena mēdz būt mierīgāka, bet ne vienmēr brīva. Daļa nodarbību ir Microsoft Teams vai Zoom vidē, tāpēc reizēm mācos no mājām. Tas ir ērti, bet klātienē man parasti ir vieglāk pajautāt pasniedzējam un saprast, ko tieši darām.",
+    day: "Pirmdiena",
+    time: "08:30 - 14:00",
+    title: "Programmēšana klātienē",
+    note: "Nedēļas plāna pārbaude, lekcija auditorijā un kodēšanas uzdevumi.",
+    load: "high",
   },
   {
-    id: "majasdarbi",
-    label: "Mājasdarbi",
-    title: "Mājasdarbi un projekti",
-    kicker: "Termiņi, mazi labojumi un darbs vakarā",
-    illustration: "tasks",
-    text:
-      "Mājasdarbi datorikas studentam nav tikai kaut kas, ko ātri izpilda pirms gulētiešanas. Bieži vien uzdevums sākumā izskatās vienkāršs, bet pēc tam atklājas, ka jāmeklē kļūda, jālasa dokumentācija vai jāpārtaisa puse risinājuma. Programmēšanā man parasti ir jāuzraksta funkcijas, jātestē rezultāts un jāiesniedz darbs laikā. Web tehnoloģijās ir jāveido nelielas lapas, piemēram, ar navigāciju, sadaļām un pielāgošanos telefona ekrānam. Vēl ir grupas projekti, kuros svarīgi sarunāt, kurš ko dara, lai beigās viss sader kopā. Visvairāk mācos vakaros, jo pa dienu ir lekcijas un ceļš. Dažreiz pietiek ar vienu stundu, bet pirms termiņiem var sanākt sēdēt daudz ilgāk. Man palīdz vienkāršs saraksts ar darāmajiem darbiem, lai galvā nav pilnīgs haoss.",
+    day: "Otrdiena",
+    time: "10:15 - 15:40",
+    title: "Datubāzes un vaicājumi",
+    note: "SQL piemēri, praktiskais darbs un īsa konsultācija Teams vidē.",
+    load: "medium",
   },
   {
-    id: "platformas",
-    label: "Platformas",
-    title: "Studiju platformas",
-    kicker: "Vieta materiāliem, sarunām, lekcijām un kodam",
-    illustration: "platforms",
-    text:
-      "Ikdienā izmantoju vairākas platformas, un katrai ir sava nozīme. Moodle jeb e-studijas ir galvenā vieta, kur skatos lekciju materiālus, mājasdarbu aprakstus, termiņus un vērtējumus. Ja kaut kas nav skaidrs, vispirms pārbaudu tieši tur. Microsoft Teams vairāk izmantojam saziņai ar pasniedzējiem un kursabiedriem. Tur var būt arī paziņojumi, faili un tiešsaistes nodarbības. Zoom parasti vajadzīgs lekcijām vai konsultācijām, kad nodarbība notiek attālināti. GitHub ir noderīgs, kad jāglabā kods vai jāstrādā pie projekta kopā ar citiem. Sākumā visas šīs vietas var šķist par daudz, bet ar laiku pierod. Galvenais ir regulāri pārbaudīt paziņojumus un nepazaudēt termiņus. Ja visu atstāj uz pēdējo brīdi, platformas vairs nepalīdz, jo problēma ir pašā plānošanā.",
+    day: "Trešdiena",
+    time: "09:00 - 16:00",
+    title: "Algoritmi",
+    note: "Grūtākā diena, jo daudz jādomā par uzdevumu loģiku un kļūdām.",
+    load: "high",
   },
   {
-    id: "cels",
-    label: "Ceļš",
-    title: "Ceļš uz universitāti",
-    kicker: "Rīta rutīna un mazliet laika sev",
-    illustration: "route",
-    text:
-      "Dienās, kad lekcijas ir klātienē, rīts sākas diezgan vienkārši. Pieceļos, pārbaudu telefonu, ātri paskatos lekciju grafiku un pārliecinos, ka somā ir dators un lādētājs. Bez lādētāja datorikas studentam diena var ātri kļūt sarežģīta. Uz universitāti parasti braucu ar sabiedrisko transportu. Ceļš aizņem apmēram trīsdesmit līdz četrdesmit minūtes, atkarībā no satiksmes un tā, cik veiksmīgi sanāk pārsēsties. Pa ceļam klausos mūziku, pārskatu ziņas Teams vai vienkārši mēģinu pamosties. Reizēm autobusā vēlreiz izlasu mājasdarba noteikumus, ja vakarā kaut kas palicis neskaidrs. Klātienes dienās man patīk tas, ka var satikt kursabiedrus un pēc lekcijas aprunāties par uzdevumiem. Tas palīdz justies vairāk iesaistītam, nevis tikai sēdēt vienam pie ekrāna.",
+    day: "Ceturtdiena",
+    time: "12:30 - 17:10",
+    title: "Web tehnoloģijas",
+    note: "HTML, CSS, JavaScript un lapas pielāgošana dažādiem ekrāniem.",
+    load: "medium",
   },
   {
-    id: "brivais-laiks",
-    label: "Brīvais laiks",
-    title: "Brīvais laiks",
-    kicker: "Atpūta arī ir daļa no normālas nedēļas",
-    illustration: "free",
-    text:
-      "Brīvais laiks nedēļas laikā nav vienmērīgs. Dažās dienās pēc lekcijām vēl ir daudz darbu, bet citās var paspēt arī atpūsties. Man patīk aiziet uz sporta zāli vai vienkārši iziet pastaigā, jo pēc vairākām stundām pie datora galva kļūst nogurusi. Reizēm satieku draugus, uzspēlēju spēles vai paskatos filmu. Tas palīdz pārslēgties un pēc tam atgriezties pie mācībām ar svaigāku prātu. Protams, ir arī vakari, kad brīvais laiks pārvēršas par papildu mācīšanos, īpaši pirms iesniegšanas termiņiem. Tomēr cenšos neatstāt visu tikai uz nakti, jo tad nākamajā dienā ir grūtāk klausīties lekcijās. Man šķiet, ka datorikas studentam svarīgi iemācīties ne tikai programmēt, bet arī normāli sadalīt spēkus visas nedēļas garumā.",
+    day: "Piektdiena",
+    time: "11:00 - 13:20",
+    title: "Projekta labojumi",
+    note: "Mierīgāka diena: pārbaudu iesniegumus un sakārtoju nākamās nedēļas darbus.",
+    load: "calm",
   },
 ];
 
-const navItems = [{ id: "sakums", label: "Sākums" }, ...sections.map(({ id, label }) => ({ id, label }))];
+const homework: Homework[] = [
+  {
+    course: "Programmēšana",
+    title: "Funkciju tests un kļūdu labošana",
+    deadline: "Otrdiena, 23:59",
+    status: "Procesā",
+    progress: 68,
+    span: "wide",
+  },
+  {
+    course: "Datubāzes",
+    title: "SQL vaicājumu kopa",
+    deadline: "Trešdiena, 20:00",
+    status: "Pabeigts",
+    progress: 100,
+  },
+  {
+    course: "Web tehnoloģijas",
+    title: "Responsīva vienas lapas mājaslapa",
+    deadline: "Piektdiena, 23:59",
+    status: "Jāpārbauda",
+    progress: 84,
+  },
+  {
+    course: "Algoritmi",
+    title: "Rekursijas uzdevumi",
+    deadline: "Svētdiena, 18:00",
+    status: "Procesā",
+    progress: 46,
+  },
+  {
+    course: "Grupas projekts",
+    title: "Sadalīt uzdevumus un apvienot kodu",
+    deadline: "Nākamā pirmdiena",
+    status: "Plānots",
+    progress: 25,
+  },
+];
+
+const platforms: Platform[] = [
+  {
+    name: "LU e-studijas",
+    purpose: "Lekciju materiāli, mājasdarbu apraksti, termiņi un vērtējumi.",
+    usage: "Katru dienu",
+  },
+  {
+    name: "Microsoft Teams",
+    purpose: "Saziņa ar pasniedzējiem, grupas darbs un tiešsaistes nodarbības.",
+    usage: "Bieži",
+  },
+  {
+    name: "Zoom",
+    purpose: "Lekcijas un konsultācijas, kad nodarbība notiek attālināti.",
+    usage: "Dažas reizes nedēļā",
+  },
+  {
+    name: "GitHub",
+    purpose: "Koda glabāšana, projekta versijas un komandas darba pārskatīšana.",
+    usage: "Projektu laikā",
+  },
+];
+
+const commute: CommuteStep[] = [
+  {
+    time: "06:45",
+    title: "Rīta pārbaude",
+    desc: "Paskatos grafiku, ielieku somā datoru, lādētāju un pierakstus.",
+  },
+  {
+    time: "07:30",
+    title: "Ceļš līdz transportam",
+    desc: "Īsa pastaiga un ziņu pārskatīšana Teams, kamēr vēl mēģinu pamosties.",
+  },
+  {
+    time: "08:10",
+    title: "Brauciens uz universitāti",
+    desc: "Transportā klausos mūziku vai pārlasu mājasdarba noteikumus.",
+  },
+  {
+    time: "08:55",
+    title: "Ierašanās fakultātē",
+    desc: "Satieku kursabiedrus un pirms lekcijas salīdzinu, kas kuram sanācis.",
+  },
+];
+
+const hobbies: Hobby[] = [
+  {
+    title: "Sports un pastaigas",
+    desc: "Pēc vairākām stundām pie datora palīdz kustība: sporta zāle, pastaiga vai vienkārši svaigs gaiss.",
+    tag: "3x nedēļā",
+    big: true,
+  },
+  {
+    title: "Spēles",
+    desc: "Vakaros ar draugiem uzspēlēju kooperatīvas spēles, lai pārslēgtos no mācībām.",
+    tag: "Vakaros",
+  },
+  {
+    title: "Filmas",
+    desc: "Kad nav steidzamu termiņu, paskatos filmu vai seriālu un atlieku datoru malā.",
+    tag: "Brīvdienās",
+  },
+  {
+    title: "Draugi",
+    desc: "Sarunas ar kursabiedriem bieži palīdz saprast uzdevumu labāk nekā vēl viena dokumentācijas lapa.",
+    tag: "Pēc lekcijām",
+  },
+];
 
 export default function Home() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
+    const saved = window.localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setDark(saved ? saved === "dark" : prefersDark);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.dataset.theme = dark ? "dark" : "light";
+    window.localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
   return (
-    <main>
+    <main className="app-shell">
       <header className="site-header">
         <a className="brand" href="#sakums" aria-label="Uz sākumu">
-          <span className="brand-mark">DS</span>
-          <span>Datorikas nedēļa</span>
+          <span className="brand-mark">LU</span>
+          <span>
+            Datorikas nedēļa
+            <small>studenta dienasgrāmata</small>
+          </span>
         </a>
 
         <nav className="nav" aria-label="Galvenā navigācija">
@@ -90,132 +238,185 @@ export default function Home() {
           aria-label={dark ? "Ieslēgt gaišo režīmu" : "Ieslēgt tumšo režīmu"}
           onClick={() => setDark((value) => !value)}
         >
-          <span aria-hidden="true">{dark ? "☀" : "◐"}</span>
+          <span aria-hidden="true">{dark ? "☀" : "●"}</span>
           <span>{dark ? "Gaišais" : "Tumšais"}</span>
         </button>
       </header>
 
-      <section className="hero" id="sakums">
-        <div className="hero-copy">
-          <p className="eyebrow">Latvijas Universitāte · datorikas students</p>
-          <h1>Viena darba nedēļa datorikas studenta dzīvē</h1>
-          <p className="hero-text">
-            Šī mājaslapa parāda vienu parastu, bet diezgan pilnu studiju nedēļu:
-            lekcijas, mājasdarbus, platformas, ceļu uz universitāti un brīvo laiku.
-            Viss aprakstīts vienkārši, tā, kā students pats varētu pastāstīt par savu ikdienu.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-link" href="#lekcijas">
-              Skatīt nedēļu
-            </a>
-            <span className="author">Autors: Staņislavs Students</span>
-          </div>
-        </div>
-
-        <div className="hero-visual" aria-label="Ilustrācija ar studenta nedēļas plānu">
-          <div className="laptop">
-            <div className="screen-top">
-              <span />
-              <span />
-              <span />
+      <section className="hero section-pad" id="sakums">
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <p className="overline">Latvijas Universitāte / Datorikas fakultāte</p>
+            <h1>Viena darba nedēļa datorikas studenta dzīvē</h1>
+            <p className="lead">
+              Lapa parāda studenta ikdienu: lekcijas, mājasdarbus, platformas,
+              ceļu uz universitāti un brīvo laiku. Dizains ir sakārtots kā
+              dienasgrāmata ar īsiem blokiem, lai nedēļu var ātri pārskatīt.
+            </p>
+            <div className="hero-actions">
+              <a className="primary-link" href="#lekcijas">
+                Skatīt nedēļu
+              </a>
+              <span className="byline">Autors: Staņislavs Students</span>
             </div>
-            <div className="calendar-grid">
-              {["P", "O", "T", "C", "P"].map((day, index) => (
-                <div className="day-card" key={day}>
-                  <strong>{day}</strong>
-                  <span style={{ height: `${44 + index * 8}px` }} />
-                </div>
-              ))}
+          </div>
+
+          <div className="hero-panel" aria-label="Nedēļas kopsavilkums">
+            <div className="panel-top">
+              <span>03. kurss</span>
+              <strong>DF</strong>
+            </div>
+            <div className="focus-card">
+              <p className="overline">Šonedēļ fokusā</p>
+              <h2>Termiņi, kods un normāls miegs</h2>
+            </div>
+            <div className="metric-grid">
+              <div>
+                <strong>5</strong>
+                <span>studiju dienas</span>
+              </div>
+              <div>
+                <strong>4</strong>
+                <span>platformas</span>
+              </div>
+              <div>
+                <strong>30+</strong>
+                <span>ceļa minūtes</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="overview" aria-label="Nedēļas īsais pārskats">
-        <div>
-          <strong>Pirmdiena</strong>
-          <span>programmēšana klātienē un nedēļas plāna pārbaude</span>
-        </div>
-        <div>
-          <strong>Trešdiena</strong>
-          <span>algoritmi, praktiski uzdevumi un darbs ar kļūdām</span>
-        </div>
-        <div>
-          <strong>Piektdiena</strong>
-          <span>projekta labojumi un mazliet vairāk laika atelpai</span>
+      <section className="section-pad band" id="lekcijas">
+        <SectionIntro
+          number="01"
+          title="Lekciju grafiks"
+          text="Nedēļa mainās atkarībā no termiņiem, bet ritms parasti ir līdzīgs: klātienes lekcijas, praktiskie darbi un daļa nodarbību tiešsaistē."
+        />
+        <div className="week-grid">
+          {week.map((item) => (
+            <article className={`day-card ${item.load}`} key={item.day}>
+              <div className="card-head">
+                <span>{item.time}</span>
+                <i aria-hidden="true" />
+              </div>
+              <h3>{item.day}</h3>
+              <strong>{item.title}</strong>
+              <p>{item.note}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <div className="content">
-        {sections.map((section, index) => (
-          <article className="student-section" id={section.id} key={section.id}>
-            <div className="section-visual">
-              <Illustration type={section.illustration} />
-            </div>
-            <div className="section-copy">
-              <p className="section-number">0{index + 1}</p>
-              <h2>{section.title}</h2>
-              <p className="kicker">{section.kicker}</p>
-              <p>{section.text}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+      <section className="section-pad" id="majasdarbi">
+        <SectionIntro
+          number="02"
+          title="Mājasdarbi un projekti"
+          text="Pēc lekcijām sākas patstāvīgais darbs. Visvairāk laika aizņem kļūdu meklēšana, dokumentācijas lasīšana un projektu salikšana kopā."
+        />
+        <div className="homework-grid">
+          {homework.map((item) => (
+            <article className={`homework-card ${item.span ?? ""}`} key={item.title}>
+              <div className="card-head">
+                <span>{item.course}</span>
+                <em>{item.status}</em>
+              </div>
+              <h3>{item.title}</h3>
+              <p>Termiņš: {item.deadline}</p>
+              <div
+                className="progress"
+                style={{ "--progress": `${item.progress}%` } as React.CSSProperties}
+                aria-label={`Izpilde ${item.progress}%`}
+              >
+                <span />
+              </div>
+              <div className="progress-meta">
+                <span>Izpilde</span>
+                <strong>{item.progress}%</strong>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-pad band" id="platformas">
+        <SectionIntro
+          number="03"
+          title="Studiju platformas"
+          text="Ikdienā viena platforma reti atrisina visu. Materiāli, sarunas, lekcijas un kods sadalās pa vairākām vietām."
+        />
+        <div className="platform-grid">
+          {platforms.map((item, index) => (
+            <article className="platform-card" key={item.name}>
+              <div className="platform-number">0{index + 1}</div>
+              <h3>{item.name}</h3>
+              <p>{item.purpose}</p>
+              <div>
+                <span>Lietojums</span>
+                <strong>{item.usage}</strong>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-pad" id="cels">
+        <SectionIntro
+          number="04"
+          title="Ceļš uz universitāti"
+          text="Klātienes dienās rīta rutīna ir gandrīz mehāniska, bet tieši tā palīdz nepazaudēt ritmu."
+        />
+        <div className="timeline">
+          {commute.map((item) => (
+            <article className="timeline-step" key={item.time}>
+              <time>{item.time}</time>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-pad band" id="brivais-laiks">
+        <SectionIntro
+          number="05"
+          title="Brīvais laiks"
+          text="Atpūta nav tikai balva pēc darba. Tā ir daļa no nedēļas, lai nākamajā dienā vispār būtu spēks klausīties lekcijās."
+        />
+        <div className="hobby-grid">
+          {hobbies.map((item) => (
+            <article className={`hobby-card ${item.big ? "big" : ""}`} key={item.title}>
+              <span>{item.tag}</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <footer className="footer">
+        <div>
+          <strong>Staņislavs Students</strong>
+          <span>LU Datorika / darba nedēļas apraksts</span>
+        </div>
+        <p>Vienas lapas mājaslapa par lekcijām, platformām, mājasdarbiem un atelpas brīžiem.</p>
+        <small>© 2026</small>
+      </footer>
     </main>
   );
 }
 
-function Illustration({ type }: { type: Section["illustration"] }) {
-  if (type === "schedule") {
-    return (
-      <div className="illustration schedule-art" aria-hidden="true">
-        <span className="bar long" />
-        <span className="bar mid" />
-        <span className="bar short" />
-        <span className="clock">9:00</span>
-      </div>
-    );
-  }
-
-  if (type === "tasks") {
-    return (
-      <div className="illustration task-art" aria-hidden="true">
-        <span className="check done" />
-        <span className="check" />
-        <span className="code-line" />
-        <span className="deadline">23:59</span>
-      </div>
-    );
-  }
-
-  if (type === "platforms") {
-    return (
-      <div className="illustration platform-art" aria-hidden="true">
-        <span>Moodle</span>
-        <span>Teams</span>
-        <span>Zoom</span>
-        <span>GitHub</span>
-      </div>
-    );
-  }
-
-  if (type === "route") {
-    return (
-      <div className="illustration route-art" aria-hidden="true">
-        <span className="stop start" />
-        <span className="route-line" />
-        <span className="bus">LU</span>
-        <span className="stop end" />
-      </div>
-    );
-  }
-
+function SectionIntro({ number, title, text }: { number: string; title: string; text: string }) {
   return (
-    <div className="illustration free-art" aria-hidden="true">
-      <span className="moon" />
-      <span className="play" />
-      <span className="dumbbell" />
-      <span className="small-note" />
+    <div className="section-intro">
+      <div>
+        <p className="overline">{number} / Sadaļa</p>
+        <h2>{title}</h2>
+      </div>
+      <p>{text}</p>
     </div>
   );
 }
