@@ -69,6 +69,12 @@
   background: hsl(var(--surface-elevated));
 }
 
+.platform-custom-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
 @media (max-width: 1023px) {
   #sakums {
     align-items: flex-start;
